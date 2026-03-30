@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة إدارة البراوي | تحكم كامل</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { font-family: 'Tajawal', sans-serif; margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body { background: #f0f2f8; padding: 20px; }
+        
+        #loginOverlay, #error404 { position: fixed; top:0; left:0; width:100%; height:100%; background: #0a1c2f; z-index: 9999; display: flex; justify-content: center; align-items: center; color: white; flex-direction: column; }
+        #error404 { display: none; background: #c0392b; text-align: center; padding: 20px;}
+        .login-box { background: white; color: #333; padding: 40px; border-radius: 20px; text-align: center; width: 90%; max-width: 400px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .login-box input { width: 100%; padding: 12px; margin: 15px 0; border: 1px solid #ccc; border-radius: 10px; font-size: 16px; text-align: center;}
+        .login-box button { width: 100%; padding: 12px; background: #e67e22; color: white; border: none; border-radius: 10px; font-size: 16px; cursor: pointer; margin-bottom: 10px;}
+        .fingerprint-btn { background: #2c3e50 !important; cursor: not-allowed; opacity: 0.8;}
+        
+        .dashboard-container { max-width: 1400px; margin: auto; display: none; }
+        h1 { color: #0a1c2f; border-right: 5px solid #e67e22; padding-right: 15px; margin-bottom: 25px; display: flex; justify-content: space-between; align-items: center;}
+        .stats-cards { display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 30px; }
+        .stat-card { background: white; border-radius: 28px; padding: 20px; flex:1; min-width:160px; box-shadow:0 5px 12px rgba(0,0,0,0.05); font-size: 18px; cursor: pointer; transition: 0.2s;}
+        .stat-card:hover { transform: translateY(-3px); box-shadow:0 8px 15px rgba(0,0,0,0.1); }
+        .section-card { background: white; border-radius: 28px; padding: 20px; margin-bottom: 30px; box-shadow: 0 5px 14px rgba(0,0,0,0.05); }
+        .section-title { font-size: 22px; font-weight: bold; margin-bottom: 20px; border-bottom: 2px solid #e67e22; display: inline-block; }
+        table { width: 100%; border-collapse: collapse; overflow-x: auto; display: block; }
+        th, td { padding: 12px 8px; border-bottom: 1px solid #eee; text-align: right; }
+        button { background: #e67e22; border: none; padding: 8px 16px; border-radius: 30px; color: white; cursor: pointer; margin: 2px; }
+        .btn-danger { background: #c0392b; } .btn-success { background: #27ae60; }
+        input, select { padding: 8px; border-radius: 10px; border: 1px solid #ccc; margin: 5px; }
+        .flex-form { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-bottom: 15px; }
+        .admin-settings { background: #eee; padding: 15px; border-radius: 15px; margin-top: 20px;}
+        .old-price-td { text-decoration: line-through; color: #888; font-size: 14px;}
+        
+        .profits-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;}
+        .profit-box { padding: 20px; border-radius: 15px; text-align: center; border: 1px solid #ddd; }
+    </style>
+</head>
+<body>
+
+<div id="error404">
+    <h1 style="font-size: 80px; border: none; color: white;">404</h1>
+    <h2 id="errTitle">عذراً، غير مصرح لك بالدخول</h2>
+    <p id="errDesc">لقد قمت بإدخال بيانات خاطئة.</p>
+    <button onclick="location.reload()" id="btnBack" style="margin-top:20px; padding: 10px 20px; background: white; color: #c0392b; border: none; border-radius: 10px; cursor: pointer;">رجوع للمحاولة</button>
+</div>
+
+<div id="loginOverlay">
+    <div class="login-box">
+        <h2 style="margin-bottom: 10px;" id="lblLoginTitle"><i class="fas fa-lock"></i> نظام الإدارة الآمن</h2>
+        <input type="password" id="adminPassInput" placeholder="أدخل كلمة المرور">
+        <button onclick="checkAdminLogin()" id="btnLoginPass">دخول بكلمة المرور</button>
+        <button class="fingerprint-btn" onclick="mockFingerprint()" title="قيد التطوير" id="btnLoginFinger"><i class="fas fa-fingerprint"></i> دخول بالبصمة</button>
+    </div>
+</div>
+
+<div class="dashboard-container" id="mainDashboard">
+    <h1>
+        <span><i class="fas fa-store"></i> <span id="lblDashTitle">لوحة تحكم البراوي</span></span>
+        <div>
+            <a href="index.html" id="linkStore" style="font-size:16px; color:#e67e22; text-decoration:none; margin-left: 15px; font-weight: bold;">🛒 عرض المتجر</a>
+            <button onclick="toggleAdminLang()" style="background:#2c3e50; border-radius:10px;"><i class="fas fa-globe"></i> <span id="adminLangText">EN</span></button>
+        </div>
+    </h1>
+    <div class="stats-cards" id="statsArea"></div>
+
+    <div class="section-card" id="salesDetailsArea"></div>
+
+    <div class="section-card" id="productsSection">
+        <div class="section-title" id="lblSecProd">📦 إدارة المنتجات</div>
+        <div class="flex-form">
+            <input type="text" id="prodName" placeholder="اسم المنتج">
+            <input type="text" id="prodNameEn" placeholder="الاسم (إنجليزي)">
+            
+            <select id="prodCat">
+                <option value="رجالي" id="optCatM">رجالي</option>
+                <option value="حريمي" id="optCatW">حريمي</option>
+                <option value="أطفال" id="optCatK">أطفال</option>
+            </select>
+            <input type="text" id="prodSizes" placeholder="المقاسات (مثال: S, M, L)">
+            <input type="text" id="prodDesc" placeholder="تفاصيل المنتج (الوصف)">
+            <input type="text" id="prodDescEn" placeholder="الوصف (إنجليزي)">
+            
+            <input type="number" id="prodOldPrice" placeholder="السعر قبل الخصم">
+            <input type="number" id="prodPrice" placeholder="السعر بعد الخصم">
+            
+            <input type="number" id="prodStock" placeholder="المخزون">
+            <input type="file" id="prodImage" accept="image/*" title="اختر صورة المنتج">
+            <button id="addProductBtn" class="btn-success">➕ إضافة للمتجر</button>
+            <button id="cancelEditBtn" class="btn-danger" style="display:none;" onclick="cancelEdit()">❌ إلغاء التعديل</button>
+        </div>
+        <table id="productsTable">
+            <thead><tr><th id="thImg">الصورة</th><th id="thName">الاسم</th><th id="thCat">الفئة</th><th id="thSizes">المقاسات</th><th id="thOldP">السعر قبل</th><th id="thPrice">السعر بعد</th><th id="thStock">المخزون</th><th id="thAction">إجراءات</th></tr></thead>
+            <tbody></tbody>
+        </table>
+    </div>
+
+    <div class="section-card" id="activitySection">
+        <div class="section-title" id="lblSecActivity">📊 نشاط المستخدمين الحالي (السلة والمفضلة)</div>
+        <div style="display:flex; gap:20px; flex-wrap:wrap;">
+            <div style="flex:1; background:#f9f9fc; padding:15px; border-radius:15px;">
+                <h3 id="lblCartActivity" style="margin-bottom:10px; color:#0a1c2f;">🛒 محتويات سلة المشتريات</h3>
+                <table id="cartActivityTable">
+                    <thead><tr><th id="thActCartProd">المنتج</th><th id="thActCartQty">الكمية</th></tr></thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+            <div style="flex:1; background:#f9f9fc; padding:15px; border-radius:15px;">
+                <h3 id="lblFavActivity" style="margin-bottom:10px; color:#0a1c2f;">❤️ المنتجات المضافة للمفضلة</h3>
+                <table id="favActivityTable">
+                    <thead><tr><th id="thActFavProd">المنتج</th></tr></thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="section-card" id="ordersSection">
+        <div class="section-title" id="lblSecOrders">🧾 إدارة الطلبات والمبيعات</div>
+        <table id="ordersTable"><thead><tr><th id="thOId">رقم الطلب</th><th id="thOData">بيانات العميل</th><th id="thOPay">طريقة الدفع</th><th id="thOItems">المنتجات</th><th id="thOTotal">الإجمالي</th><th id="thOStatus">الحالة</th><th id="thOUpdate">تحديث</th></tr></thead><tbody></tbody></table>
+    </div>
+
+    <div class="section-card" id="customersSection">
+        <div class="section-title" id="lblSecCust">👥 العملاء المسجلين</div>
+        <table id="customersTable"><thead><tr><th id="thCName">الاسم</th><th id="thCEmail">البريد</th><th id="thCPhone">رقم الهاتف</th><th id="thCDate">تاريخ التسجيل</th></tr></thead><tbody></tbody></table>
+    </div>
+
+    <div class="section-card" id="complaintsSection">
+        <div class="section-title" id="lblSecComp">✉️ الشكاوى والاقتراحات</div>
+        <table id="complaintsTable"><thead><tr><th id="thCompName">اسم العميل</th><th id="thCompPhone">الهاتف</th><th id="thCompEmail">البريد</th><th id="thCompMsg">الرسالة</th><th id="thCompDate">التاريخ</th></tr></thead><tbody></tbody></table>
+    </div>
+
+    <div class="section-card" id="socialSection">
+        <div class="section-title" id="lblSecSocial">🌐 إدارة روابط التواصل الاجتماعي</div>
+        <div class="flex-form">
+            <input type="text" id="adminFb" placeholder="رابط فيسبوك">
+            <input type="text" id="adminIg" placeholder="رابط انستجرام">
+            <input type="text" id="adminTw" placeholder="رابط تويتر">
+            <input type="text" id="adminTk" placeholder="رابط تيك توك">
+            <input type="text" id="adminWa" placeholder="رابط واتساب">
+            <button class="btn-success" onclick="saveSocials()" id="btnSaveSocial">💾 حفظ الروابط</button>
+        </div>
+    </div>
+    
+    <div class="section-card admin-settings">
+        <div class="section-title" id="lblSecSettings">⚙️ إعدادات الحساب الآمن</div><br>
+        <input type="password" id="newAdminPass" placeholder="كلمة المرور الجديدة">
+        <button onclick="changeAdminPass()" id="btnSavePass">تحديث كلمة المرور</button>
+    </div>
+</div>
+
+<script>
+    let adminLang = localStorage.getItem("barawi_admin_lang") || "ar";
+    const adminT = {
+        ar: {
+            langText: "EN", title: "لوحة تحكم البراوي", loginTitle: "نظام الإدارة الآمن", loginPass: "دخول بكلمة المرور", loginFinger: "دخول بالبصمة",
+            secProd: "📦 إدارة المنتجات", secOrders: "🧾 إدارة الطلبات والمبيعات", secCust: "👥 العملاء المسجلين", secComp: "✉️ الشكاوى والاقتراحات", secSocial: "🌐 إدارة روابط التواصل", secSettings: "⚙️ إعدادات الحساب",
+            secActivity: "📊 نشاط المستخدمين الحالي (السلة والمفضلة)", lblCartActivity: "🛒 محتويات سلة المشتريات", lblFavActivity: "❤️ المنتجات المضافة للمفضلة",
+            thImg: "الصورة", thName: "الاسم", thCat: "الفئة", thSizes: "المقاسات", thOldP: "السعر قبل", thPrice: "السعر بعد", thStock: "المخزون", thAction: "إجراءات", btnEdit: "تعديل", btnDel: "حذف", btnUpdate: "تحديث",
+            thOId: "الطلب", thOData: "العميل", thOPay: "الدفع", thOItems: "المنتجات", thOTotal: "الإجمالي", thOStatus: "الحالة", thOUpdate: "تحديث",
+            thActCartProd: "المنتج", thActCartQty: "الكمية", thActFavProd: "المنتج",
+            btnAdd: "➕ إضافة للمتجر", btnSaveEdit: "💾 حفظ التعديلات", btnCancel: "❌ إلغاء التعديل", btnSaveSocial: "💾 حفظ الروابط", btnSavePass: "تحديث كلمة المرور",
+            stat1: "📦 إجمالي المنتجات:", stat2: "🧾 طلبات العملاء:", stat3: "👥 العملاء:", stat4: "✉️ الشكاوى:",
+            profTitle: "💰 تفاصيل أرباح المبيعات", prof1: "الإجمالي الكلي للطلبات", prof2: "أرباح محصلة (تم التسليم)", prof3: "أرباح متوقعة (قيد التجهيز/مشحون)", currency: "جنيه",
+            statusNew: "جديد", statusProcessing: "تنفيذ", statusShipped: "مشحون", statusDelivered: "تم التسليم",
+            errTitle: "عذراً، غير مصرح لك بالدخول", errDesc: "لقد قمت بإدخال بيانات خاطئة.", btnBack: "رجوع للمحاولة",
+            catM: "رجالي", catW: "حريمي", catK: "أطفال", msgPassUpdated: "تم تغيير كلمة السر بنجاح للمدير!",
+            msgOpSucc: "✅ تمت العملية بنجاح!", msgEnterData: "يرجى إدخال الاسم والسعر", msgLinksUpdated: "تم تحديث الروابط!",
+            phProdName: "اسم المنتج", phProdNameEn: "الاسم (إنجليزي)", phSizes: "المقاسات (مثال: S, M, L)", phDesc: "تفاصيل المنتج (الوصف)", phDescEn: "الوصف (إنجليزي)", phOldPrice: "السعر قبل الخصم", phPrice: "السعر بعد الخصم", phStock: "المخزون",
+            phAdminPass: "أدخل كلمة المرور", phNewPass: "كلمة المرور الجديدة", linkStore: "🛒 عرض المتجر", emptyMsg: "لا توجد بيانات"
+        },
+        en: {
+            langText: "AR", title: "Al-Barawi Dashboard", loginTitle: "Secure Admin System", loginPass: "Login with Password", loginFinger: "Fingerprint Login",
+            secProd: "📦 Products Management", secOrders: "🧾 Orders & Sales", secCust: "👥 Registered Customers", secComp: "✉️ Complaints", secSocial: "🌐 Social Links", secSettings: "⚙️ Account Settings",
+            secActivity: "📊 User Activity (Cart & Favorites)", lblCartActivity: "🛒 Shopping Cart Contents", lblFavActivity: "❤️ Favorited Products",
+            thImg: "Image", thName: "Name", thCat: "Category", thSizes: "Sizes", thOldP: "Old Price", thPrice: "Price", thStock: "Stock", thAction: "Actions", btnEdit: "Edit", btnDel: "Delete", btnUpdate: "Update",
+            thOId: "Order", thOData: "Customer", thOPay: "Payment", thOItems: "Items", thOTotal: "Total", thOStatus: "Status", thOUpdate: "Update",
+            thActCartProd: "Product", thActCartQty: "Qty", thActFavProd: "Product",
+            btnAdd: "➕ Add to Store", btnSaveEdit: "💾 Save Changes", btnCancel: "❌ Cancel Edit", btnSaveSocial: "💾 Save Links", btnSavePass: "Update Password",
+            stat1: "📦 Total Products:", stat2: "🧾 Customer Orders:", stat3: "👥 Customers:", stat4: "✉️ Complaints:",
+            profTitle: "💰 Sales Profit Details", prof1: "Total Gross Orders", prof2: "Collected (Delivered)", prof3: "Expected (Processing/Shipped)", currency: "EGP",
+            statusNew: "New", statusProcessing: "Processing", statusShipped: "Shipped", statusDelivered: "Delivered",
+            errTitle: "Access Denied", errDesc: "You entered incorrect credentials.", btnBack: "Back to try again",
+            catM: "Men", catW: "Women", catK: "Kids", msgPassUpdated: "Password updated successfully!",
+            msgOpSucc: "✅ Operation successful!", msgEnterData: "Please enter name and price.", msgLinksUpdated: "Links updated!",
+            phProdName: "Product Name", phProdNameEn: "Name (English)", phSizes: "Sizes (e.g., S, M, L)", phDesc: "Product Details (Description)", phDescEn: "Description (English)", phOldPrice: "Old Price", phPrice: "Current Price", phStock: "Stock",
+            phAdminPass: "Enter Password", phNewPass: "New Password", linkStore: "🛒 View Store", emptyMsg: "No data available"
+        }
+    };
+
+    function applyAdminLang() {
+        document.documentElement.lang = adminLang;
+        document.documentElement.dir = adminLang === "ar" ? "rtl" : "ltr";
+        let t = adminT[adminLang];
+        
+        document.getElementById("adminLangText").innerText = t.langText;
+        document.getElementById("lblDashTitle").innerText = t.title;
+        document.getElementById("lblLoginTitle").innerHTML = `<i class="fas fa-lock"></i> ${t.loginTitle}`;
+        document.getElementById("btnLoginPass").innerText = t.loginPass;
+        document.getElementById("btnLoginFinger").innerHTML = `<i class="fas fa-fingerprint"></i> ${t.loginFinger}`;
+        document.getElementById("linkStore").innerText = t.linkStore;
+        
+        document.getElementById("errTitle").innerText = t.errTitle;
+        document.getElementById("errDesc").innerText = t.errDesc;
+        document.getElementById("btnBack").innerText = t.btnBack;
+
+        document.getElementById("lblSecProd").innerText = t.secProd;
+        document.getElementById("lblSecOrders").innerText = t.secOrders;
+        document.getElementById("lblSecCust").innerText = t.secCust;
+        document.getElementById("lblSecComp").innerText = t.secComp;
+        document.getElementById("lblSecSocial").innerText = t.secSocial;
+        document.getElementById("lblSecSettings").innerText = t.secSettings;
+        
+        document.getElementById("lblSecActivity").innerText = t.secActivity;
+        document.getElementById("lblCartActivity").innerText = t.lblCartActivity;
+        document.getElementById("lblFavActivity").innerText = t.lblFavActivity;
+        
+        if(!editingProductId) document.getElementById("addProductBtn").innerText = t.btnAdd;
+        else document.getElementById("addProductBtn").innerText = t.btnSaveEdit;
+        document.getElementById("cancelEditBtn").innerText = t.btnCancel;
+        document.getElementById("btnSaveSocial").innerText = t.btnSaveSocial;
+        document.getElementById("btnSavePass").innerText = t.btnSavePass;
+        
+        document.getElementById("optCatM").innerText = t.catM;
+        document.getElementById("optCatW").innerText = t.catW;
+        document.getElementById("optCatK").innerText = t.catK;
+
+        document.getElementById("prodName").placeholder = t.phProdName;
+        document.getElementById("prodNameEn").placeholder = t.phProdNameEn;
+        document.getElementById("prodSizes").placeholder = t.phSizes;
+        document.getElementById("prodDesc").placeholder = t.phDesc;
+        document.getElementById("prodDescEn").placeholder = t.phDescEn;
+        document.getElementById("prodOldPrice").placeholder = t.phOldPrice;
+        document.getElementById("prodPrice").placeholder = t.phPrice;
+        document.getElementById("prodStock").placeholder = t.phStock;
+        document.getElementById("adminPassInput").placeholder = t.phAdminPass;
+        document.getElementById("newAdminPass").placeholder = t.phNewPass;
+
+        document.getElementById("thImg").innerText = t.thImg; document.getElementById("thName").innerText = t.thName; document.getElementById("thCat").innerText = t.thCat;
+        document.getElementById("thSizes").innerText = t.thSizes; document.getElementById("thOldP").innerText = t.thOldP; document.getElementById("thPrice").innerText = t.thPrice;
+        document.getElementById("thStock").innerText = t.thStock; document.getElementById("thAction").innerText = t.thAction;
+        
+        document.getElementById("thOId").innerText = t.thOId; document.getElementById("thOData").innerText = t.thOData; document.getElementById("thOPay").innerText = t.thOPay;
+        document.getElementById("thOItems").innerText = t.thOItems; document.getElementById("thOTotal").innerText = t.thOTotal; document.getElementById("thOStatus").innerText = t.thOStatus; document.getElementById("thOUpdate").innerText = t.thOUpdate;
+
+        document.getElementById("thActCartProd").innerText = t.thActCartProd; document.getElementById("thActCartQty").innerText = t.thActCartQty;
+        document.getElementById("thActFavProd").innerText = t.thActFavProd;
+
+        renderProductsTable();
+        renderOrders();
+        updateStats();
+        renderActivity();
+    }
+
+    function toggleAdminLang() {
+        adminLang = adminLang === "ar" ? "en" : "ar";
+        localStorage.setItem("barawi_admin_lang", adminLang);
+        applyAdminLang();
+    }
+
+    let currentAdminPass = localStorage.getItem("barawi_admin_pass") || "Ahmed2512";
+    
+    function checkAdminLogin() {
+        let input = document.getElementById("adminPassInput").value;
+        if(input === currentAdminPass) {
+            document.getElementById("loginOverlay").style.display = "none";
+            document.getElementById("mainDashboard").style.display = "block";
+            initDashboard();
+        } else {
+            document.getElementById("loginOverlay").style.display = "none";
+            document.getElementById("error404").style.display = "flex";
+        }
+    }
+
+    function mockFingerprint() {
+        alert(adminLang === 'ar' ? "⚠️ ميزة الدخول بالبصمة غير مفعلة في الوقت الحالي." : "⚠️ Fingerprint login currently disabled.");
+    }
+
+    function changeAdminPass() {
+        let newVal = document.getElementById("newAdminPass").value;
+        if(newVal.length > 3) {
+            localStorage.setItem("barawi_admin_pass", newVal);
+            currentAdminPass = newVal;
+            alert(adminT[adminLang].msgPassUpdated);
+            document.getElementById("newAdminPass").value = "";
+        }
+    }
+
+    let products = [];
+    let orders = [];
+    let customers = [];
+    let complaints = [];
+    let editingProductId = null;
+
+    function initDashboard() {
+        applyAdminLang();
+        products = JSON.parse(localStorage.getItem("barawi_products")) || [];
+        orders = JSON.parse(localStorage.getItem("barawi_orders")) || [];
+        customers = JSON.parse(localStorage.getItem("barawi_customers")) || [];
+        complaints = JSON.parse(localStorage.getItem("barawi_complaints")) || [];
+        
+        renderProductsTable();
+        renderOrders();
+        renderCustomers();
+        renderComplaints();
+        updateStats();
+        loadSocialsToInputs();
+        renderActivity();
+        
+        setInterval(() => {
+            if(editingProductId) return; 
+            let newOrders = JSON.parse(localStorage.getItem("barawi_orders")) || [];
+            let newCustomers = JSON.parse(localStorage.getItem("barawi_customers")) || [];
+            let newComplaints = JSON.parse(localStorage.getItem("barawi_complaints")) || [];
+            let newProducts = JSON.parse(localStorage.getItem("barawi_products")) || [];
+            
+            if(JSON.stringify(newOrders) !== JSON.stringify(orders) || 
+               JSON.stringify(newCustomers) !== JSON.stringify(customers) ||
+               JSON.stringify(newComplaints) !== JSON.stringify(complaints) ||
+               JSON.stringify(newProducts) !== JSON.stringify(products)) {
+                
+                orders = newOrders; customers = newCustomers; complaints = newComplaints; products = newProducts;
+                renderOrders(); renderCustomers(); renderComplaints(); renderProductsTable(); updateStats();
+            }
+            // تحديث نشاط السلة والمفضلة باستمرار
+            renderActivity();
+        }, 2000);
+    }
+
+    function syncProductsToStore() {
+        localStorage.setItem("barawi_products", JSON.stringify(products));
+        localStorage.setItem("barawi_products_update", Date.now().toString());
+        renderProductsTable();
+        updateStats();
+    }
+
+    function renderProductsTable() {
+        let t = adminT[adminLang];
+        let tbody = document.querySelector("#productsTable tbody");
+        tbody.innerHTML = products.map(p => {
+            let displayedCat = p.category;
+            let dispName = adminLang === "en" && p.nameEn ? p.nameEn : p.name;
+            let dispDesc = adminLang === "en" && p.descEn ? p.descEn : (p.desc || '');
+
+            if(adminLang === "en") {
+                if(p.category === "رجالي") displayedCat = t.catM;
+                if(p.category === "حريمي") displayedCat = t.catW;
+                if(p.category === "أطفال") displayedCat = t.catK;
+            }
+            return `
+            <tr>
+                <td><img src="${p.image}" width="50" style="border-radius:10px;"></td>
+                <td>${dispName}<br><small style="color:#7f8c8d;">${dispDesc}</small></td>
+                <td>${displayedCat}</td>
+                <td>${p.sizes || '-'}</td>
+                <td class="old-price-td">${p.oldPrice ? p.oldPrice + ' '+t.currency : '-'}</td>
+                <td style="font-weight:bold; color:#e67e22;">${p.price} ${t.currency}</td>
+                <td><input type="number" value="${p.stock}" id="stock-${p.id}" style="width:60px;"> <button onclick="updateStock(${p.id})">${t.btnUpdate}</button></td>
+                <td>
+                    <button class="btn-success" onclick="startEditProduct(${p.id})">${t.btnEdit}</button>
+                    <button class="btn-danger" onclick="deleteProduct(${p.id})">${t.btnDel}</button>
+                </td>
+            </tr>
+            `;
+        }).join('');
+    }
+
+    function renderActivity() {
+        let t = adminT[adminLang];
+        let carts = JSON.parse(localStorage.getItem("barawi_cart")) || [];
+        let favs = JSON.parse(localStorage.getItem("barawi_favs")) || [];
+
+        let cartTbody = document.querySelector("#cartActivityTable tbody");
+        cartTbody.innerHTML = carts.length ? carts.map(i => {
+            let n = adminLang === 'en' && i.nameEn ? i.nameEn : i.name;
+            return `<tr><td>${n}</td><td>${i.quantity}</td></tr>`;
+        }).join('') : `<tr><td colspan="2" style="text-align:center;">${t.emptyMsg}</td></tr>`;
+
+        let favTbody = document.querySelector("#favActivityTable tbody");
+        favTbody.innerHTML = favs.length ? favs.map(i => {
+            let n = adminLang === 'en' && i.nameEn ? i.nameEn : i.name;
+            return `<tr><td>${n}</td></tr>`;
+        }).join('') : `<tr><td style="text-align:center;">${t.emptyMsg}</td></tr>`;
+    }
+
+    window.startEditProduct = (id) => {
+        let p = products.find(x => x.id === id);
+        if(!p) return;
+        editingProductId = id;
+        document.getElementById("prodName").value = p.name;
+        document.getElementById("prodNameEn").value = p.nameEn || "";
+        document.getElementById("prodCat").value = p.category;
+        document.getElementById("prodSizes").value = p.sizes || "";
+        document.getElementById("prodDesc").value = p.desc || "";
+        document.getElementById("prodDescEn").value = p.descEn || "";
+        document.getElementById("prodOldPrice").value = p.oldPrice || "";
+        document.getElementById("prodPrice").value = p.price;
+        document.getElementById("prodStock").value = p.stock;
+        
+        document.getElementById("addProductBtn").innerText = adminT[adminLang].btnSaveEdit;
+        document.getElementById("cancelEditBtn").style.display = "inline-block";
+        document.getElementById("productsSection").scrollIntoView();
+    };
+
+    window.cancelEdit = () => {
+        editingProductId = null;
+        resetProductForm();
+        document.getElementById("cancelEditBtn").style.display = "none";
+        document.getElementById("addProductBtn").innerText = adminT[adminLang].btnAdd;
+    };
+
+    window.updateStock = (id) => {
+        let prod = products.find(p=>p.id===id);
+        if(prod) { prod.stock = parseInt(document.getElementById(`stock-${id}`).value); syncProductsToStore(); alert(adminT[adminLang].msgOpSucc); }
+    };
+    window.deleteProduct = (id) => { products = products.filter(p=>p.id!==id); syncProductsToStore(); };
+
+    document.getElementById("addProductBtn").onclick = () => {
+        let t = adminT[adminLang];
+        let name = document.getElementById("prodName").value;
+        let nameEn = document.getElementById("prodNameEn").value;
+        let cat = document.getElementById("prodCat").value;
+        let sizes = document.getElementById("prodSizes").value || "متوفر";
+        let desc = document.getElementById("prodDesc").value || "";
+        let descEn = document.getElementById("prodDescEn").value || "";
+        let oldPrice = parseFloat(document.getElementById("prodOldPrice").value) || null;
+        let price = parseFloat(document.getElementById("prodPrice").value);
+        let stock = parseInt(document.getElementById("prodStock").value) || 10;
+        let fileInput = document.getElementById("prodImage");
+        
+        if(!name || isNaN(price)) { alert(t.msgEnterData); return; }
+
+        if(editingProductId) {
+            let pIndex = products.findIndex(x => x.id === editingProductId);
+            products[pIndex].name = name;
+            products[pIndex].nameEn = nameEn;
+            products[pIndex].category = cat;
+            products[pIndex].sizes = sizes;
+            products[pIndex].desc = desc;
+            products[pIndex].descEn = descEn;
+            products[pIndex].oldPrice = oldPrice;
+            products[pIndex].price = price;
+            products[pIndex].stock = stock;
+            
+            if(fileInput.files && fileInput.files[0]) {
+                let reader = new FileReader();
+                reader.onload = function(e) { products[pIndex].image = e.target.result; finishSave(); };
+                reader.readAsDataURL(fileInput.files[0]);
+            } else { finishSave(); }
+        } else {
+            let newProd = { id: Date.now(), name, nameEn, category: cat, sizes, desc, descEn, oldPrice: oldPrice, price: price, stock };
+            if(fileInput.files && fileInput.files[0]) {
+                let reader = new FileReader();
+                reader.onload = function(e) { newProd.image = e.target.result; products.push(newProd); finishSave(); };
+                reader.readAsDataURL(fileInput.files[0]);
+            } else {
+                newProd.image = "https://placehold.co/400x500/f0f0f0/333?text=Product+Image";
+                products.push(newProd); finishSave();
+            }
+        }
+    };
+    
+    function finishSave() {
+        syncProductsToStore();
+        alert(adminT[adminLang].msgOpSucc);
+        cancelEdit();
+    }
+
+    function resetProductForm() {
+        document.getElementById("prodName").value=""; document.getElementById("prodNameEn").value=""; 
+        document.getElementById("prodSizes").value=""; document.getElementById("prodDesc").value=""; document.getElementById("prodDescEn").value=""; 
+        document.getElementById("prodOldPrice").value=""; document.getElementById("prodPrice").value=""; 
+        document.getElementById("prodImage").value=""; 
+    }
+
+    function renderOrders() {
+        let t = adminT[adminLang];
+        let tbody = document.querySelector("#ordersTable tbody");
+        tbody.innerHTML = orders.length ? orders.map((o, idx) => {
+            let sColor = o.status==="جديد"?'red': (o.status==="تم التسليم"?'green':'#e67e22');
+            let dispStatus = o.status;
+            if(adminLang === "en") {
+                if(o.status === "جديد") dispStatus = t.statusNew;
+                if(o.status === "تنفيذ") dispStatus = t.statusProcessing;
+                if(o.status === "مشحون") dispStatus = t.statusShipped;
+                if(o.status === "تم التسليم") dispStatus = t.statusDelivered;
+            }
+            return `
+            <tr>
+                <td>${o.id}</td>
+                <td style="line-height:1.6;">
+                    <b>${o.customerName}</b><br>
+                    📞 ${o.customerPhone || '-'} ${o.customerAltPhone ? '<br> بديل: ' + o.customerAltPhone : ''}<br>
+                    📍 ${o.customerAddress || '-'}
+                </td>
+                <td><span style="background:#eef2f5; padding:4px 8px; border-radius:10px;">${o.paymentMethod || '-'}</span></td>
+                <td>${o.items.map(i=>{
+                    let n = adminLang === 'en' && i.nameEn ? i.nameEn : i.name;
+                    return n + " (x"+i.quantity+")";
+                }).join("<br>")}</td>
+                <td style="font-weight:bold; color:#e67e22;">${o.total} ${t.currency}</td>
+                <td style="color: ${sColor}; font-weight:bold;">${dispStatus}</td>
+                <td>
+                    <select onchange="updateOrderStatus(${idx}, this.value)">
+                        <option value="جديد" ${o.status==="جديد"?"selected":""}>${t.statusNew}</option>
+                        <option value="تنفيذ" ${o.status==="تنفيذ"?"selected":""}>${t.statusProcessing}</option>
+                        <option value="مشحون" ${o.status==="مشحون"?"selected":""}>${t.statusShipped}</option>
+                        <option value="تم التسليم" ${o.status==="تم التسليم"?"selected":""}>${t.statusDelivered}</option>
+                    </select>
+                </td>
+            </tr>
+            `;
+        }).join('') : `<tr><td colspan="7" style="text-align:center;">${t.emptyMsg}</td></tr>`;
+    }
+
+    window.updateOrderStatus = (idx, status) => { 
+        orders[idx].status = status; 
+        localStorage.setItem("barawi_orders", JSON.stringify(orders)); 
+        renderOrders(); updateStats(); 
+    };
+
+    function renderCustomers() {
+        let t = adminT[adminLang];
+        let tbody = document.querySelector("#customersTable tbody");
+        tbody.innerHTML = customers.length ? customers.map(c => `
+            <tr><td>${c.name}</td><td>${c.email}</td><td>${c.phone}</td><td>${c.date}</td></tr>
+        `).join('') : `<tr><td colspan="4" style="text-align:center;">${t.emptyMsg}</td></tr>`;
+    }
+
+    function renderComplaints() {
+        let t = adminT[adminLang];
+        let tbody = document.querySelector("#complaintsTable tbody");
+        tbody.innerHTML = complaints.length ? complaints.map(c => `
+            <tr><td>${c.name}</td><td>${c.phone || '-'}</td><td>${c.email || '-'}</td><td>${c.msg}</td><td>${c.date}</td></tr>
+        `).join('') : `<tr><td colspan="5" style="text-align:center;">${t.emptyMsg}</td></tr>`;
+    }
+
+    function loadSocialsToInputs() {
+        let socials = JSON.parse(localStorage.getItem("barawi_socials")) || { fb: "", ig: "", tw: "", tk: "", wa: "" };
+        document.getElementById("adminFb").value = socials.fb; document.getElementById("adminIg").value = socials.ig;
+        document.getElementById("adminTw").value = socials.tw; document.getElementById("adminTk").value = socials.tk; document.getElementById("adminWa").value = socials.wa;
+    }
+
+    function saveSocials() {
+        let socials = {
+            fb: document.getElementById("adminFb").value, ig: document.getElementById("adminIg").value,
+            tw: document.getElementById("adminTw").value, tk: document.getElementById("adminTk").value, wa: document.getElementById("adminWa").value
+        };
+        localStorage.setItem("barawi_socials", JSON.stringify(socials));
+        alert(adminT[adminLang].msgLinksUpdated);
+    }
+
+    function updateStats() {
+        let t = adminT[adminLang];
+        let totalSales = orders.reduce((sum,o)=>sum+o.total, 0);
+        let completedSales = orders.filter(o=>o.status==="تم التسليم").reduce((sum,o)=>sum+o.total, 0);
+        let pendingSales = totalSales - completedSales;
+
+        document.getElementById("statsArea").innerHTML = `
+            <div class="stat-card" onclick="document.getElementById('productsSection').scrollIntoView()">${t.stat1} <b>${products.length}</b></div>
+            <div class="stat-card" onclick="document.getElementById('ordersSection').scrollIntoView()">${t.stat2} <b>${orders.length}</b></div>
+            <div class="stat-card" onclick="document.getElementById('customersSection').scrollIntoView()">${t.stat3} <b>${customers.length}</b></div>
+            <div class="stat-card" onclick="document.getElementById('complaintsSection').scrollIntoView()">${t.stat4} <b>${complaints.length}</b></div>
+        `;
+
+        document.getElementById("salesDetailsArea").innerHTML = `
+            <div class="section-title">${t.profTitle}</div>
+            <div class="profits-grid">
+                <div class="profit-box" style="background:#f9f9fc;">
+                    <h3>${t.prof1}</h3>
+                    <p style="font-size:28px; font-weight:bold; color:#e67e22; margin-top:10px;">${totalSales} ${t.currency}</p>
+                </div>
+                <div class="profit-box" style="background:#e8f8f5; border-color:#1abc9c;">
+                    <h3>${t.prof2}</h3>
+                    <p style="font-size:28px; font-weight:bold; color:#1abc9c; margin-top:10px;">${completedSales} ${t.currency}</p>
+                </div>
+                <div class="profit-box" style="background:#fef9e7; border-color:#f1c40f;">
+                    <h3>${t.prof3}</h3>
+                    <p style="font-size:28px; font-weight:bold; color:#f39c12; margin-top:10px;">${pendingSales} ${t.currency}</p>
+                </div>
+            </div>
+        `;
+    }
+</script>
+</body>
+</html>
