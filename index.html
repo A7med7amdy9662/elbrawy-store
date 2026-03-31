@@ -763,5 +763,72 @@
         if(e.key === "barawi_socials") { loadSocials(); }
     });
 </script>
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+    import { getDatabase, ref, onValue, set } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyA3fvwjy0R7WbJI1Q_FxlnA7Yg4_gp4R4o",
+        authDomain: "elbrawy-store.firebaseapp.com",
+        databaseURL: "https://elbrawy-store-default-rtdb.firebaseio.com",
+        projectId: "elbrawy-store",
+        storageBucket: "elbrawy-store.firebasestorage.app",
+        messagingSenderId: "479239164544",
+        appId: "1:479239164544:web:33558e90f22752b5b88c65",
+        measurementId: "G-BZ945TT7T1"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    // سحب المنتجات
+    onValue(ref(db, 'products'), (snapshot) => {
+        const data = snapshot.val();
+        if (data) {
+            window.products = Object.values(data);
+            if (typeof window.renderProducts === 'function') window.renderProducts();
+        }
+    });
+
+    // تحديث روابط التواصل
+    onValue(ref(db, 'socials'), (snapshot) => {
+        const s = snapshot.val();
+        if(s) {
+            if(document.getElementById("linkFb")) document.getElementById("linkFb").href = s.fb || "#";
+            if(document.getElementById("linkIg")) document.getElementById("linkIg").href = s.ig || "#";
+            if(document.getElementById("linkWa")) document.getElementById("linkWa").href = `https://wa.me/${s.wa}`;
+        }
+    });
+
+    // وظيفة الشراء الحقيقية
+    window.checkout = function() {
+        let cName = document.getElementById("chkName")?.value;
+        let cPhone = document.getElementById("chkPhone")?.value;
+        let cAddress = document.getElementById("chkAddress")?.value;
+
+        if(!cName || !cPhone || !cAddress) { alert("برجاء إدخال البيانات كاملة"); return; }
+        
+        const orderId = "ORD-" + Date.now();
+        const orderData = {
+            id: orderId,
+            customerName: cName,
+            customerPhone: cPhone,
+            customerAddress: cAddress,
+            items: window.cart,
+            total: window.cart.reduce((sum, i) => sum + (i.price * i.quantity), 0),
+            status: "جديد",
+            date: new Date().toLocaleString('ar-EG')
+        };
+
+        set(ref(db, 'orders/' + orderId), orderData).then(() => {
+            alert("تم إرسال طلبك بنجاح!");
+            window.cart = [];
+            window.updateCounters();
+            window.renderCart();
+            window.closePage('cartPage');
+        });
+    };
+</script>
+
 </body>
-</html>
+    </html>
