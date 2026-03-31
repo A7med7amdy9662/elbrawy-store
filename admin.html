@@ -584,5 +584,75 @@
         `;
     }
 </script>
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+    import { getDatabase, ref, onValue, set, update, remove } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyA3fvwjy0R7WbJI1Q_FxlnA7Yg4_gp4R4o",
+        authDomain: "elbrawy-store.firebaseapp.com",
+        databaseURL: "https://elbrawy-store-default-rtdb.firebaseio.com",
+        projectId: "elbrawy-store",
+        storageBucket: "elbrawy-store.firebasestorage.app",
+        messagingSenderId: "479239164544",
+        appId: "1:479239164544:web:33558e90f22752b5b88c65",
+        measurementId: "G-BZ945TT7T1"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    // مزامنة حية لكل البيانات
+    window.initDashboard = function() {
+        applyAdminLang();
+        
+        // جلب المنتجات
+        onValue(ref(db, 'products'), (snapshot) => {
+            window.products = snapshot.val() ? Object.values(snapshot.val()) : [];
+            renderProductsTable();
+            updateStats();
+        });
+
+        // جلب الطلبات
+        onValue(ref(db, 'orders'), (snapshot) => {
+            window.orders = snapshot.val() ? Object.values(snapshot.val()) : [];
+            renderOrders();
+            updateStats();
+        });
+
+        // جلب الروابط
+        onValue(ref(db, 'socials'), (snapshot) => {
+            const s = snapshot.val();
+            if(s) {
+                document.getElementById("adminFb").value = s.fb || "";
+                document.getElementById("adminWa").value = s.wa || "";
+            }
+        });
+    };
+
+    // تعديل وظيفة حفظ المنتج
+    window.finishSave = function() {
+        const lastProd = window.products[window.products.length - 1];
+        const id = editingProductId || lastProd.id;
+        const data = editingProductId ? window.products.find(p=>p.id === id) : lastProd;
+        
+        set(ref(db, 'products/' + id), data).then(() => {
+            alert("تم الحفظ بنجاح");
+            cancelEdit();
+        });
+    };
+
+    // حذف منتج
+    window.deleteProduct = function(id) {
+        if(confirm("حذف هذا المنتج؟")) remove(ref(db, 'products/' + id));
+    };
+
+    // تحديث حالة الطلب
+    window.updateOrderStatus = function(idx, status) {
+        const orderId = window.orders[idx].id;
+        update(ref(db, 'orders/' + orderId), { status: status });
+    };
+</script>
+
 </body>
-</html>
+    </html>
