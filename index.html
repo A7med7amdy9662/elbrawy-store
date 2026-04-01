@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
-    <head>
+<head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
     
     <!-- SEO -->
     <title>متجر البراوي | أفضل الملابس والإكسسوارات بأفضل سعر</title>
@@ -20,12 +20,10 @@
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image">
-    </head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>البراوي | متجر الأزياء الراقي</title>
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Tajawal', sans-serif; }
         body { background: #f5f7fb; color: #1e2a3e; }
@@ -322,8 +320,8 @@ document.getElementById("priceFilter").addEventListener("input", renderProducts)
 document.getElementById("resetFilters").onclick = () => { document.getElementById("categoryFilter").value="all"; document.getElementById("priceFilter").value=5000; document.getElementById("searchInput").value=""; renderProducts(); };
 window.onload = () => { applyLanguage(); updateCounters(); loadSocials(); renderProducts(); renderFavorites(); renderCart(); };
 window.addEventListener("storage", (e) => { if(e.key === "barawi_products_update"){ products = JSON.parse(localStorage.getItem("barawi_products")) || []; renderProducts(); } if(e.key === "barawi_socials"){ loadSocials(); } if(e.key === "barawi_cart"){ cart = JSON.parse(localStorage.getItem("barawi_cart")) || []; renderCart(); updateCounters(); } if(e.key === "barawi_favs"){ favorites = JSON.parse(localStorage.getItem("barawi_favs")) || []; renderFavorites(); updateCounters(); } if(e.key === "barawi_orders"){ allOrders = JSON.parse(localStorage.getItem("barawi_orders")) || []; renderOrders(); }});
-
 </script>
+
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
 import { getDatabase, ref, onValue, set } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
@@ -345,7 +343,7 @@ window.barawiSaveOrderToFirebase = async function(orderData) {
   await set(ref(db, "orders/" + orderId), orderData);
 };
 window.barawiSaveCustomerToFirebase = async function(customerData) {
-  const key = customerData?.id || (customerData?.email ? safeDbKey(customerData.email) : ("C" + Date.now()));
+  const key = customerData?.id || (customerData?.email ? window.safeDbKey(customerData.email) : ("C" + Date.now()));
   await set(ref(db, "customers/" + key), customerData);
 };
 window.barawiSaveComplaintToFirebase = async function(complaintData) {
@@ -358,4 +356,4 @@ onValue(ref(db, "orders"), (snapshot) => { const data = snapshot.val(); if(data)
 onValue(ref(db, "socials"), (snapshot) => { const s = snapshot.val(); if(s){ if(typeof window.setSocials === "function") window.setSocials(s); localStorage.setItem("barawi_socials", JSON.stringify(s)); } });
 </script>
 </body>
-                                                       </html>
+    </html>
