@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    
+
     <!-- SEO -->
     <title>متجر البراوي | أفضل الملابس والإكسسوارات بأفضل سعر</title>
     <meta name="description" content="متجر البراوي أفضل متجر ملابس وإكسسوارات في مصر. خامات ممتازة، أسعار مميزة، شحن سريع، وعروض يومية. اطلب الآن بسهولة.">
@@ -116,13 +116,28 @@
     <div class="page-header"><span id="lblAuthPage">👤 حسابي</span><span class="close-page" onclick="closePage('authPage')">&times;</span></div>
     <div class="auth-form" id="loginFormDiv">
         <h3 style="margin-bottom: 20px;" id="lblAuthTitle">تسجيل الدخول / إنشاء حساب جديد</h3>
-        <input type="text" id="userName" placeholder="الاسم الكامل">
+
+        <input type="text" id="userName1" placeholder="الاسم">
+        <input type="text" id="userName2" placeholder="اسم الأب">
+        <input type="text" id="userName3" placeholder="اسم العائلة">
+
         <input type="email" id="userEmail" placeholder="البريد الإلكتروني">
-        <input type="tel" id="userPhone" placeholder="رقم الهاتف">
+
+        <div style="display:flex; gap:10px; align-items:center; margin:10px 0; flex-wrap:wrap;">
+            <button type="button" class="btn-fav" style="flex:0 0 auto;" onclick="sendEmailCode('auth')">إرسال كود</button>
+            <input type="text" id="authEmailCode" placeholder="كود التأكيد" style="flex:1; min-width:160px;">
+            <button type="button" class="btn-fav" style="flex:0 0 auto;" onclick="verifyEmailCode('auth')">تأكيد</button>
+        </div>
+
+        <p id="authEmailStatus" style="margin-top:6px; font-weight:bold;"></p>
+
+        <input type="tel" id="userPhone" placeholder="رقم الهاتف" inputmode="numeric" maxlength="11" pattern="^01\d{9}$">
+
         <div class="password-container">
             <input type="password" id="userPass" placeholder="كلمة المرور">
             <i class="fas fa-eye" id="togglePassIcon" onclick="togglePassword()"></i>
         </div>
+
         <button class="btn-primary" id="btnAuthSubmit" style="width:100%; padding: 12px; margin-top: 15px;" onclick="registerUser()">تسجيل / دخول</button>
         <p id="welcomeMsg" style="margin-top: 15px; color: green; font-weight: bold; display: none;"></p>
     </div>
@@ -133,7 +148,7 @@
     <div class="auth-form">
         <h3 style="margin-bottom: 20px;" id="lblCompTitle">أرسل لنا رأيك أو شكواك</h3>
         <input type="text" id="compName" placeholder="الاسم الكامل">
-        <input type="tel" id="compPhone" placeholder="رقم الهاتف">
+        <input type="tel" id="compPhone" placeholder="رقم الهاتف" inputmode="numeric" maxlength="11" pattern="^01\d{9}$">
         <input type="email" id="compEmail" placeholder="البريد الإلكتروني">
         <textarea id="compMsg" placeholder="اكتب شكواك أو اقتراحك هنا..." rows="5"></textarea>
         <button class="btn-primary" id="btnCompSubmit" style="width:100%; padding: 12px; margin-top: 15px;" onclick="sendComplaint()">إرسال للإدارة</button>
@@ -145,30 +160,30 @@
     <div style="max-width: 900px; margin: auto;">
         <div class="section-title" id="lblSizeMen">القسم الرجالي</div>
         <table class="size-table">
-            <tr><th class="th1">المقاس العالمي</th><th class="th2">محيط الصدر (سم)</th><th class="th3">الخصر (سم)</th><th class="th4">الطول (سم)</th></tr>
-            <tr><td>S</td><td>90 - 95</td><td>76 - 81</td><td>70</td></tr>
-            <tr><td>M</td><td>96 - 101</td><td>82 - 86</td><td>72</td></tr>
-            <tr><td>L</td><td>102 - 107</td><td>87 - 92</td><td>74</td></tr>
-            <tr><td>XL</td><td>108 - 113</td><td>93 - 98</td><td>76</td></tr>
-            <tr><td>XXL</td><td>114 - 119</td><td>99 - 104</td><td>78</td></tr>
-        </table>
+             <tr><th class="th1">المقاس العالمي</th><th class="th2">محيط الصدر (سم)</th><th class="th3">الخصر (سم)</th><th class="th4">الطول (سم)</th></tr>
+             <tr><td>S</td><td>90 - 95</td><td>76 - 81</td><td>70</td></tr>
+             <tr><td>M</td><td>96 - 101</td><td>82 - 86</td><td>72</td></tr>
+             <tr><td>L</td><td>102 - 107</td><td>87 - 92</td><td>74</td></tr>
+             <tr><td>XL</td><td>108 - 113</td><td>93 - 98</td><td>76</td></tr>
+             <tr><td>XXL</td><td>114 - 119</td><td>99 - 104</td><td>78</td></tr>
+         </table>
         <div class="section-title" id="lblSizeWomen">القسم الحريمي</div>
         <table class="size-table">
-            <tr><th class="th1">المقاس العالمي</th><th class="th2">محيط الصدر (سم)</th><th class="th3">الخصر (سم)</th><th class="th5">الأرداف (سم)</th></tr>
-            <tr><td>S</td><td>82 - 86</td><td>64 - 68</td><td>90 - 94</td></tr>
-            <tr><td>M</td><td>87 - 92</td><td>69 - 74</td><td>95 - 100</td></tr>
-            <tr><td>L</td><td>93 - 98</td><td>75 - 80</td><td>101 - 106</td></tr>
-            <tr><td>XL</td><td>99 - 104</td><td>81 - 86</td><td>107 - 112</td></tr>
-        </table>
+             <tr><th class="th1">المقاس العالمي</th><th class="th2">محيط الصدر (سم)</th><th class="th3">الخصر (سم)</th><th class="th5">الأرداف (سم)</th></tr>
+             <tr><td>S</td><td>82 - 86</td><td>64 - 68</td><td>90 - 94</td></tr>
+             <tr><td>M</td><td>87 - 92</td><td>69 - 74</td><td>95 - 100</td></tr>
+             <tr><td>L</td><td>93 - 98</td><td>75 - 80</td><td>101 - 106</td></tr>
+             <tr><td>XL</td><td>99 - 104</td><td>81 - 86</td><td>107 - 112</td></tr>
+         </table>
         <div class="section-title" id="lblSizeKids">قسم الأطفال (حسب العمر)</div>
         <table class="size-table">
-            <tr><th class="th6">العمر</th><th class="th4">الطول (سم)</th><th class="th7">الوزن التقريبي (كجم)</th></tr>
-            <tr><td>2 - 3</td><td>92 - 98</td><td>13 - 15</td></tr>
-            <tr><td>4 - 5</td><td>104 - 110</td><td>16 - 19</td></tr>
-            <tr><td>6 - 7</td><td>116 - 122</td><td>20 - 24</td></tr>
-            <tr><td>8 - 9</td><td>128 - 134</td><td>25 - 30</td></tr>
-            <tr><td>10 - 12</td><td>140 - 152</td><td>31 - 40</td></tr>
-        </table>
+             <tr><th class="th6">العمر</th><th class="th4">الطول (سم)</th><th class="th7">الوزن التقريبي (كجم)</th></tr>
+             <tr><td>2 - 3</td><td>92 - 98</td><td>13 - 15</td></tr>
+             <tr><td>4 - 5</td><td>104 - 110</td><td>16 - 19</td></tr>
+             <tr><td>6 - 7</td><td>116 - 122</td><td>20 - 24</td></tr>
+             <tr><td>8 - 9</td><td>128 - 134</td><td>25 - 30</td></tr>
+             <tr><td>10 - 12</td><td>140 - 152</td><td>31 - 40</td></tr>
+         </table>
     </div>
 </div>
 
@@ -182,10 +197,27 @@
     <div id="cartContainer" style="background: white; padding: 20px; border-radius: 20px; max-width: 800px; margin: auto;"></div>
     <div id="checkoutFormArea" style="background: white; padding: 20px; border-radius: 20px; max-width: 800px; margin: 20px auto; display: none;">
         <h3 style="margin-bottom:15px; color:#e67e22;" id="lblChkTitle">📍 بيانات التوصيل والدفع</h3>
-        <input type="text" id="chkName" placeholder="الاسم بالكامل" style="width:100%; padding:12px; margin-bottom:10px; border:1px solid #ddd; border-radius:10px;">
-        <input type="tel" id="chkPhone" placeholder="رقم الهاتف" style="width:100%; padding:12px; margin-bottom:10px; border:1px solid #ddd; border-radius:10px;">
-        <input type="tel" id="chkAltPhone" placeholder="رقم هاتف بديل (اختياري)" style="width:100%; padding:12px; margin-bottom:10px; border:1px solid #ddd; border-radius:10px;">
-        <input type="text" id="chkAddress" placeholder="العنوان بالتفصيل" style="width:100%; padding:12px; margin-bottom:10px; border:1px solid #ddd; border-radius:10px;">
+
+        <input type="text" id="chkName1" placeholder="الاسم" style="width:100%; padding:12px; margin-bottom:10px; border:1px solid #ddd; border-radius:10px;">
+        <input type="text" id="chkName2" placeholder="اسم الأب" style="width:100%; padding:12px; margin-bottom:10px; border:1px solid #ddd; border-radius:10px;">
+        <input type="text" id="chkName3" placeholder="اسم العائلة" style="width:100%; padding:12px; margin-bottom:10px; border:1px solid #ddd; border-radius:10px;">
+
+        <input type="email" id="chkEmail" placeholder="البريد الإلكتروني" style="width:100%; padding:12px; margin-bottom:10px; border:1px solid #ddd; border-radius:10px;">
+
+        <div style="display:flex; gap:10px; align-items:center; margin:10px 0; flex-wrap:wrap;">
+            <button type="button" class="btn-fav" style="flex:0 0 auto;" onclick="sendEmailCode('checkout')">إرسال كود</button>
+            <input type="text" id="checkoutEmailCode" placeholder="كود التأكيد" style="flex:1; min-width:160px; width:auto; padding:12px; border:1px solid #ddd; border-radius:10px;">
+            <button type="button" class="btn-fav" style="flex:0 0 auto;" onclick="verifyEmailCode('checkout')">تأكيد</button>
+        </div>
+
+        <p id="checkoutEmailStatus" style="margin-top:6px; font-weight:bold;"></p>
+
+        <input type="tel" id="chkPhone" placeholder="رقم الهاتف" style="width:100%; padding:12px; margin-bottom:10px; border:1px solid #ddd; border-radius:10px;" inputmode="numeric" maxlength="11" pattern="^01\d{9}$">
+
+        <input type="text" id="chkGov" placeholder="المحافظة" style="width:100%; padding:12px; margin-bottom:10px; border:1px solid #ddd; border-radius:10px;">
+        <input type="text" id="chkCenter" placeholder="المركز" style="width:100%; padding:12px; margin-bottom:10px; border:1px solid #ddd; border-radius:10px;">
+        <input type="text" id="chkStreet" placeholder="الشارع" style="width:100%; padding:12px; margin-bottom:10px; border:1px solid #ddd; border-radius:10px;">
+
         <h4 style="margin:10px 0;" id="lblChkPayment">💳 طريقة الدفع:</h4>
         <select id="chkPayment" style="width:100%; padding:12px; margin-bottom:10px; border:1px solid #ddd; border-radius:10px;">
             <option value="الدفع عند الاستلام" id="optPay1">الدفع عند الاستلام</option>
@@ -227,7 +259,18 @@
     </div>
 </footer>
 
+<!-- EmailJS Script -->
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script type="text/javascript">
+   (function(){
+      emailjs.init({
+        publicKey: "lN2pu-p6AXgIj-aSf", // تم تعيين المفتاح العام
+      });
+   })();
+</script>
+
 <script>
+// ------------------- البيانات والترجمة ------------------
 const translations = {
 ar:{langText:"EN",searchInput:"🔍 ابحث بالاسم أو النوع...",lblCategory:"🏷️ الفئة:",optAll:"الكل",optMen:"رجالي",optWomen:"حريمي",optKids:"أطفال",lblPrice:"💰 السعر حتى:",resetFilters:"إعادة ضبط",btnAddToCart:"🛒 إضافة",btnFavRemove:"إزالة من المفضلة ❌",currency:"جنيه",lblAuthPage:"👤 حسابي",lblAuthTitle:"تسجيل الدخول / إنشاء حساب جديد",btnAuthSubmit:"تسجيل / دخول",lblCompPage:"✉️ الشكاوى والاقتراحات",lblCompTitle:"أرسل لنا رأيك أو شكواك",btnCompSubmit:"إرسال للإدارة",lblSizePage:"📏 جدول المقاسات الشامل",lblSizeMen:"القسم الرجالي",lblSizeWomen:"القسم الحريمي",lblSizeKids:"قسم الأطفال",lblFavPage:"❤️ قائمة المفضلة",favEmpty:"المفضلة فارغة",lblCartPage:"🛒 سلة المشتريات",cartEmpty:"السلة فارغة",lblChkTitle:"📍 بيانات التوصيل والدفع",lblChkPayment:"💳 طريقة الدفع:",optPay1:"الدفع عند الاستلام",optPay2:"محفظة إلكترونية",optPay3:"بطاقة ائتمانية",finalCheckoutBtn:"إتمام الطلب",lblOrdersPage:"📦 طلباتي",orderNum:"رقم الطلب",orderStatusText:"حالة الطلب",noOrders:"لا توجد طلبات سابقة",statusNew:"جديد",statusProcessing:"تنفيذ",statusShipped:"مشحون",statusDelivered:"تم التسليم",lblModalCatTitle:"🏷️ الفئة:",lblModalDescTitle:"📝 التفاصيل:",lblModalSizesTitle:"📏 المقاسات المتاحة:",lblModalPriceTitle:"السعر:",modalAddToCart:"➕ أضف إلى السلة",lblFooterDesc:"البراوي - أرقى التشكيلات | شحن سريع وتجربة مميزة",cartTotal:"الإجمالي: ",cartQty:"الكمية: ",btnDelete:"حذف",msgStockOut:"عذراً، هذا المنتج نفذ من المخزون حالياً",msgStockLimit:"الكمية المطلوبة تتجاوز المخزون المتاح!",msgAddedCart:"✅ تم إضافة المنتج للسلة",msgAddedFav:"❤️ أضيف للمفضلة",msgRemFav:"🗑️ أزيل من المفضلة",msgFillData:"يرجى إكمال البيانات",msgLoginSucc:"تم التسجيل/الدخول بنجاح! أهلاً بك ",msgCartEmpty:"السلة فارغة",msgFillDelivery:"يرجى إكمال بيانات التوصيل الأساسية (الاسم، الهاتف، العنوان)",msgOrderSucc:"🎉 تم إرسال طلبك بنجاح! سيتم تجهيز منتجاتك.",msgSendSucc:"تم الإرسال بنجاح، شكراً لك!",accDetails:"👤 بيانات حسابك",accName:"الاسم:",accEmail:"البريد:",accPhone:"الهاتف:",btnLogout:"تسجيل الخروج",th1:"المقاس العالمي",th2:"محيط الصدر (سم)",th3:"الخصر (سم)",th4:"الطول (سم)",th5:"الأرداف (سم)",th6:"العمر",th7:"الوزن التقريبي (كجم)",phName:"الاسم الكامل",phEmail:"البريد الإلكتروني",phPhone:"رقم الهاتف",phPass:"كلمة المرور",phCompMsg:"اكتب شكواك أو اقتراحك هنا...",phChkName:"الاسم بالكامل",phChkPhone:"رقم الهاتف",phChkAlt:"رقم هاتف بديل (اختياري)",phChkAddr:"العنوان بالتفصيل"},
 en:{langText:"AR",searchInput:"🔍 Search by name or category...",lblCategory:"🏷️ Category:",optAll:"All",optMen:"Men",optWomen:"Women",optKids:"Kids",lblPrice:"💰 Max Price:",resetFilters:"Reset",btnAddToCart:"🛒 Add",btnFavRemove:"Remove ❌",currency:"EGP",lblAuthPage:"👤 My Account",lblAuthTitle:"Login / Register",btnAuthSubmit:"Login / Register",lblCompPage:"✉️ Complaints & Suggestions",lblCompTitle:"Send us your feedback",btnCompSubmit:"Send",lblSizePage:"📏 Size Guide",lblSizeMen:"Men's Section",lblSizeWomen:"Women's Section",lblSizeKids:"Kids' Section",lblFavPage:"❤️ Favorites",favEmpty:"Favorites are empty",lblCartPage:"🛒 Shopping Cart",cartEmpty:"Cart is empty",lblChkTitle:"📍 Delivery & Payment",lblChkPayment:"💳 Payment Method:",optPay1:"Cash on Delivery",optPay2:"E-Wallet",optPay3:"Credit Card",finalCheckoutBtn:"Complete Order",lblOrdersPage:"📦 My Orders",orderNum:"Order #",orderStatusText:"Status",noOrders:"No previous orders",statusNew:"New",statusProcessing:"Processing",statusShipped:"Shipped",statusDelivered:"Delivered",lblModalCatTitle:"🏷️ Category:",lblModalDescTitle:"📝 Details:",lblModalSizesTitle:"📏 Available Sizes:",lblModalPriceTitle:"Price:",modalAddToCart:"➕ Add to Cart",lblFooterDesc:"Al-Barawi - Premium Fashion | Fast Shipping",cartTotal:"Total: ",cartQty:"Qty: ",btnDelete:"Delete",msgStockOut:"Sorry, this product is currently out of stock",msgStockLimit:"Quantity exceeds available stock!",msgAddedCart:"✅ Product added to cart",msgAddedFav:"❤️ Added to favorites",msgRemFav:"🗑️ Removed from favorites",msgFillData:"Please complete all fields",msgLoginSucc:"Login Successful! Welcome ",msgCartEmpty:"Cart is empty",msgFillDelivery:"Please complete basic delivery info (Name, Phone, Address)",msgOrderSucc:"🎉 Order submitted successfully! Your items are being prepared.",msgSendSucc:"Sent successfully, thank you!",accDetails:"👤 Account Details",accName:"Name:",accEmail:"Email:",accPhone:"Phone:",btnLogout:"Logout",th1:"Global Size",th2:"Chest (cm)",th3:"Waist (cm)",th4:"Height (cm)",th5:"Hips (cm)",th6:"Age",th7:"Approx Weight (kg)",phName:"Full Name",phEmail:"Email Address",phPhone:"Phone Number",phPass:"Password",phCompMsg:"Type your complaint or suggestion here...",phChkName:"Full Name",phChkPhone:"Phone Number",phChkAlt:"Alternative Phone (Optional)",phChkAddr:"Full Address"}
@@ -238,6 +281,123 @@ let cart = JSON.parse(localStorage.getItem("barawi_cart")) || [];
 let favorites = JSON.parse(localStorage.getItem("barawi_favs")) || [];
 let currentUser = JSON.parse(localStorage.getItem("barawi_currentUser")) || null;
 let allOrders = JSON.parse(localStorage.getItem("barawi_orders")) || [];
+let emailVerifyState = JSON.parse(sessionStorage.getItem("barawi_email_verify") || "{}");
+
+function saveEmailVerifyState() {
+  sessionStorage.setItem("barawi_email_verify", JSON.stringify(emailVerifyState));
+}
+
+function validEgyptPhone(v) {
+  return /^01\d{9}$/.test(String(v || "").trim());
+}
+
+function joinParts(a, b, c) {
+  return [a, b, c].map(x => String(x || "").trim()).filter(Boolean).join(" ");
+}
+
+function joinAddress(gov, center, street) {
+  return [gov, center, street].map(x => String(x || "").trim()).filter(Boolean).join(" / ");
+}
+
+function setEmailStatus(context, text, ok = false) {
+  const el = document.getElementById(context === "auth" ? "authEmailStatus" : "checkoutEmailStatus");
+  if (!el) return;
+  el.innerText = text;
+  el.style.color = ok ? "green" : "crimson";
+}
+
+async function sendEmailCode(context) {
+  const inputId = context === "auth" ? "userEmail" : "chkEmail";
+  const emailInput = document.getElementById(inputId);
+  const email = String(emailInput?.value || "").trim();
+
+  if (!email) {
+    alert("يرجى إدخال البريد الإلكتروني أولاً");
+    return;
+  }
+
+  const code = String(Math.floor(100000 + Math.random() * 900000));
+  emailVerifyState[context] = {
+    email,
+    code,
+    verified: false,
+    expires: Date.now() + 10 * 60 * 1000,
+    resendCount: (emailVerifyState[context]?.resendCount || 0) + 1
+  };
+  saveEmailVerifyState();
+
+  setEmailStatus(context, emailVerifyState[context].resendCount > 1 ? "جارِ إعادة الإرسال..." : "جارِ إرسال الكود...", false);
+
+  // تعطيل الزر 30 ثانية
+  const btnId = context === "auth" ? "authSendCodeBtn" : "checkoutSendCodeBtn";
+  const sendBtn = document.getElementById(btnId);
+  if (sendBtn) {
+    sendBtn.disabled = true;
+    sendBtn.innerText = "انتظر 30 ثانية";
+  }
+
+  if (typeof window.barawiSendVerificationEmail !== "function") {
+    setEmailStatus(context, "خدمة إرسال البريد غير متصلة", false);
+    if (sendBtn) {
+      sendBtn.disabled = false;
+      sendBtn.innerText = "إعادة إرسال";
+    }
+    return;
+  }
+
+  try {
+    await window.barawiSendVerificationEmail(email, code, context);
+    setEmailStatus(context, "تم إرسال الكود إلى البريد", true);
+  } catch (e) {
+    setEmailStatus(context, "فشل إرسال الكود", false);
+    alert("فشل إرسال الكود");
+  }
+
+  let remaining = 30;
+  const timer = setInterval(() => {
+    remaining--;
+    if (sendBtn) sendBtn.innerText = `إعادة إرسال (${remaining})`;
+    if (remaining <= 0) {
+      clearInterval(timer);
+      if (sendBtn) {
+        sendBtn.disabled = false;
+        sendBtn.innerText = "إعادة إرسال";
+      }
+    }
+  }, 1000);
+}
+
+function verifyEmailCode(context) {
+  const state = emailVerifyState[context];
+  const inputId = context === "auth" ? "authEmailCode" : "checkoutEmailCode";
+  const input = document.getElementById(inputId);
+  const entered = String(input?.value || "").trim();
+
+  if (!state || !state.email) {
+    setEmailStatus(context, "أرسل الكود أولاً", false);
+    return false;
+  }
+
+  if (Date.now() > state.expires) {
+    setEmailStatus(context, "انتهت صلاحية الكود", false);
+    return false;
+  }
+
+  if (entered === state.code) {
+    state.verified = true;
+    saveEmailVerifyState();
+    setEmailStatus(context, "تم تأكيد البريد بنجاح", true);
+    return true;
+  }
+
+  setEmailStatus(context, "الكود غير صحيح", false);
+  return false;
+}
+
+function isEmailVerified(context) {
+  const state = emailVerifyState[context];
+  return !!(state && state.verified && Date.now() <= state.expires);
+}
 
 function setProducts(newProducts){ products = Array.isArray(newProducts) ? newProducts : []; localStorage.setItem("barawi_products", JSON.stringify(products)); renderProducts(); }
 function setOrders(newOrders){ allOrders = Array.isArray(newOrders) ? newOrders : []; renderOrders(); }
@@ -263,9 +423,10 @@ function applyLanguage() {
     setText("lblOrdersPage", t.lblOrdersPage);
     setText("lblModalCatTitle", t.lblModalCatTitle); setText("lblModalDescTitle", t.lblModalDescTitle); setText("lblModalSizesTitle", t.lblModalSizesTitle); setText("lblModalPriceTitle", t.lblModalPriceTitle); setText("modalAddToCart", t.modalAddToCart); setText("lblFooterDesc", t.lblFooterDesc);
     document.querySelectorAll(".currency").forEach(el => el.innerText = t.currency);
-    setPlaceholder("userName", t.phName); setPlaceholder("userEmail", t.phEmail); setPlaceholder("userPhone", t.phPhone); setPlaceholder("userPass", t.phPass);
+    setPlaceholder("userName1", t.phName); setPlaceholder("userName2", "اسم الأب"); setPlaceholder("userName3", "اسم العائلة"); setPlaceholder("userEmail", t.phEmail); setPlaceholder("userPhone", t.phPhone); setPlaceholder("userPass", t.phPass);
     setPlaceholder("compName", t.phName); setPlaceholder("compPhone", t.phPhone); setPlaceholder("compEmail", t.phEmail); setPlaceholder("compMsg", t.phCompMsg);
-    setPlaceholder("chkName", t.phChkName); setPlaceholder("chkPhone", t.phChkPhone); setPlaceholder("chkAltPhone", t.phChkAlt); setPlaceholder("chkAddress", t.phChkAddr);
+    setPlaceholder("chkName1", "الاسم"); setPlaceholder("chkName2", "اسم الأب"); setPlaceholder("chkName3", "اسم العائلة");
+    setPlaceholder("chkEmail", t.phEmail); setPlaceholder("chkPhone", t.phPhone); setPlaceholder("chkAltPhone", t.phChkAlt); setPlaceholder("chkGov", "المحافظة"); setPlaceholder("chkCenter", "المركز"); setPlaceholder("chkStreet", "الشارع");
     document.querySelectorAll(".th1").forEach(el => el.innerText = t.th1);
     document.querySelectorAll(".th2").forEach(el => el.innerText = t.th2);
     document.querySelectorAll(".th3").forEach(el => el.innerText = t.th3);
@@ -283,11 +444,11 @@ function normalizeCategory(cat){ return (cat||"").toString().toLowerCase().trim(
 function renderProducts(){ const container=document.getElementById("productsContainer"); if(!container) return; const searchTerm=(document.getElementById("searchInput")?.value||"").toLowerCase(); const category=document.getElementById("categoryFilter")?.value||"all"; const maxPrice=parseInt(document.getElementById("priceFilter")?.value)||5000; const t=translations[currentLang]; const filtered=(Array.isArray(products)?products:[]).filter(p=>{ if(!p) return false; const pCat=normalizeCategory(p.category); const catMatch=category==="all" || (category==="رجالي" && (pCat==="رجالي"||pCat==="men")) || (category==="حريمي" && (pCat==="حريمي"||pCat==="women")) || (category==="أطفال" && (pCat==="أطفال"||pCat==="kids")); const searchName=`${(p.nameEn||"").toString().toLowerCase()} ${(p.name||"").toString().toLowerCase()}`; const priceValue=Number(p.price)||0; return (searchName.includes(searchTerm) || pCat.includes(searchTerm)) && catMatch && priceValue <= maxPrice; }); container.innerHTML = filtered.map(p => { let displayedCat = p.category || ""; let dispName = (currentLang==="en" && p.nameEn) ? p.nameEn : (p.name || "-"); if(currentLang==="en"){ if(p.category==="رجالي") displayedCat="Men"; if(p.category==="حريمي") displayedCat="Women"; if(p.category==="أطفال") displayedCat="Kids"; } else { if(p.category==="Men") displayedCat="رجالي"; if(p.category==="Women") displayedCat="حريمي"; if(p.category==="Kids") displayedCat="أطفال"; } const price = Number(p.price) || 0; const oldPrice = p.oldPrice ? Number(p.oldPrice) : null; return `<div class="product-card" onclick="openProductModal(${p.id})"><div class="product-img"><img src="${p.image || ''}" alt="${dispName}"></div><div class="product-info"><div class="product-title">${dispName}</div><div style="font-size:12px; color:#888;">${displayedCat}</div><div class="price">${price} ${t.currency} ${oldPrice ? `<span class="old-price">${oldPrice} ${t.currency}</span>` : ''}</div><div class="actions"><button class="btn-add" onclick="event.stopPropagation(); addToCart(${p.id})">${t.btnAddToCart}</button><button class="btn-fav" onclick="event.stopPropagation(); toggleFavorite(${p.id})">❤️</button></div></div></div>`; }).join(''); }
 function addToCart(id){ const t=translations[currentLang]; const product=(Array.isArray(products)?products:[]).find(p=>p && p.id===id); if(!product) return; const stockValue = Number(product.stock); const hasStockLimit = Number.isFinite(stockValue); if(hasStockLimit && stockValue <= 0){ alert(t.msgStockOut); return; } const existing = cart.find(i=>i.id===id); if(existing){ const currentQty = Number(existing.quantity)||0; if(hasStockLimit && currentQty >= stockValue){ alert(t.msgStockLimit); return; } existing.quantity = currentQty + 1; } else { cart.push({...product, quantity:1}); } updateCounters(); showToast(t.msgAddedCart); renderCart(); }
 function toggleFavorite(id){ const t=translations[currentLang]; const idx=favorites.findIndex(f=>f && f.id===id); if(idx===-1){ const product=(Array.isArray(products)?products:[]).find(p=>p && p.id===id); if(!product) return; favorites.push(product); showToast(t.msgAddedFav); } else { favorites.splice(idx,1); showToast(t.msgRemFav); } updateCounters(); renderFavorites(); }
-function openProductModal(id){ const p=(Array.isArray(products)?products:[]).find(p=>p && p.id===id); if(!p) return; let displayedCat=p.category||""; const dispName=(currentLang==="en"&&p.nameEn)?p.nameEn:(p.name||"-"); const dispDesc=(currentLang==="en"&&p.descEn)?p.descEn:(p.desc||"-"); if(currentLang==="en"){ if(p.category==="رجالي") displayedCat="Men"; if(p.category==="حريمي") displayedCat="Women"; if(p.category==="أطفال") displayedCat="Kids"; } else { if(p.category==="Men") displayedCat="رجالي"; if(p.category==="Women") displayedCat="حريمي"; if(p.category==="Kids") displayedCat="أطفال"; } document.getElementById("modalTitle").innerText=dispName; document.getElementById("modalImg").src=p.image||""; document.getElementById("modalCat").innerText=displayedCat; document.getElementById("modalDesc").innerText=dispDesc; document.getElementById("modalPrice").innerText=(Number(p.price)||0)+(p.oldPrice?` (بدلاً من ${p.oldPrice})`:''); document.getElementById("modalSizes").innerText=p.sizes || (currentLang==="ar" ? "متوفر" : "Available"); document.getElementById("productModal").style.display="flex"; document.getElementById("modalAddToCart").onclick = () => { addToCart(p.id); document.getElementById("productModal").style.display="none"; }; }
+function openProductModal(id){ const p=(Array.isArray(products)?products:[]).find(p=>p && p.id===id); if(!p) return; let displayedCat=p.category||""; const dispName=(currentLang==="en"&&p.nameEn)?p.nameEn:(p.name||"-"); const dispDesc=(currentLang==="en"&&p.descEn)?p.descEn:(p.desc||"-"); if(currentLang==="en"){ if(p.category==="رجالي") displayedCat="Men"; if(p.category==="حريمي") displayedCat="Women"; if(p.category==="أطفال") displayedCat="Kids"; } else { if(p.category==="Men") displayedCat="رجالي"; if(p.category==="Women") displayedCat="حريمي"; if(p.category==="Kids") displayedCat="أطفال"; } document.getElementById("modalTitle").innerText=dispName; document.getElementById("modalImg").src=p.image||""; document.getElementById("modalCat").innerText=displayedCat; document.getElementById("modalDesc").innerText=dispDesc; document.getElementById("modalPrice").innerText=(Number(p.price)||0)+(p.oldPrice?` (بدلاً من ${p.oldPrice})`:'' ); document.getElementById("modalSizes").innerText=p.sizes || (currentLang==="ar" ? "متوفر" : "Available"); document.getElementById("productModal").style.display="flex"; document.getElementById("modalAddToCart").onclick = () => { addToCart(p.id); document.getElementById("productModal").style.display="none"; }; }
 function openPage(pageId){ const el=document.getElementById(pageId); if(el) el.style.display="block"; }
 function closePage(pageId){ const el=document.getElementById(pageId); if(el) el.style.display="none"; }
 document.getElementById("favIconBtn").onclick = () => { renderFavorites(); openPage("favPage"); };
-document.getElementById("cartIconBtn").onclick = () => { if(currentUser){ const chkName=document.getElementById("chkName"), chkPhone=document.getElementById("chkPhone"); if(chkName) chkName.value=currentUser.name||""; if(chkPhone) chkPhone.value=currentUser.phone||""; } renderCart(); openPage("cartPage"); };
+document.getElementById("cartIconBtn").onclick = () => { if(currentUser){ const chkName1=document.getElementById("chkName1"); const chkName2=document.getElementById("chkName2"); const chkName3=document.getElementById("chkName3"); const chkEmail=document.getElementById("chkEmail"); const chkPhone=document.getElementById("chkPhone"); if(chkName1 && currentUser.firstName) chkName1.value=currentUser.firstName; if(chkName2 && currentUser.fatherName) chkName2.value=currentUser.fatherName; if(chkName3 && currentUser.familyName) chkName3.value=currentUser.familyName; if(chkEmail) chkEmail.value=currentUser.email||""; if(chkPhone) chkPhone.value=currentUser.phone||""; } renderCart(); openPage("cartPage"); };
 document.getElementById("ordersIconBtn").onclick = () => { renderOrders(); openPage("ordersPage"); };
 document.getElementById("authIconBtn").onclick = () => { const t=translations[currentLang]; if(currentUser){ const loginFormDiv=document.getElementById("loginFormDiv"); if(loginFormDiv){ loginFormDiv.innerHTML = `<h3 style="margin-bottom: 20px;">${t.accDetails}</h3><div style="font-size: 16px; line-height: 2;"><p><strong>${t.accName}</strong> ${currentUser.name||""}</p><p><strong>${t.accEmail}</strong> ${currentUser.email||""}</p><p><strong>${t.accPhone}</strong> ${currentUser.phone||""}</p></div><button class="btn-primary" style="background:#c0392b; width:100%; padding: 12px; margin-top: 20px;" onclick="logoutUser()">${t.btnLogout}</button>`; } } openPage("authPage"); };
 window.logoutUser = () => { localStorage.removeItem("barawi_currentUser"); currentUser = null; location.reload(); };
@@ -296,19 +457,151 @@ function renderCart(){ const t=translations[currentLang]; const container=docume
 window.removeFromCart = (index) => { cart.splice(index,1); updateCounters(); renderCart(); };
 function renderOrders(){ const t=translations[currentLang]; const container=document.getElementById("ordersContainer"); if(!container) return; const myOrderIds = JSON.parse(localStorage.getItem("barawi_my_orders_ids")) || []; const userOrders = (Array.isArray(allOrders)?allOrders:[]).filter(o=>myOrderIds.includes(o.id)).slice().reverse(); container.innerHTML = userOrders.length ? userOrders.map(o=>{ let statusClass="status-new"; let displayStatus=o.status; if(o.status==="جديد"){ statusClass="status-new"; displayStatus=t.statusNew; } if(o.status==="تنفيذ"){ statusClass="status-processing"; displayStatus=t.statusProcessing; } if(o.status==="مشحون"){ statusClass="status-shipped"; displayStatus=t.statusShipped; } if(o.status==="تم التسليم"){ statusClass="status-delivered"; displayStatus=t.statusDelivered; } return `<div class="order-card"><div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; border-bottom:1px solid #eee; padding-bottom:10px; margin-bottom:10px;"><h4 style="color:#0a1c2f;">${t.orderNum}: ${o.id}</h4><span class="order-status ${statusClass}">${t.orderStatusText}: ${displayStatus}</span></div><div style="margin-bottom: 15px;">${(o.items||[]).map(i=>{ const dispName=(currentLang==="en"&&i.nameEn)?i.nameEn:(i.name||"-"); return `<div style="padding:5px 0; color:#555;">▪ ${dispName} - ${t.cartQty}${Number(i.quantity)||0}</div>`; }).join('')}</div><h4 style="color:#e67e22;">${t.cartTotal} ${o.total} ${t.currency}</h4></div>`; }).join('') : `<h3 style='text-align:center;'>${t.noOrders}</h3>`; }
 function togglePassword(){ const passInput=document.getElementById("userPass"); const icon=document.getElementById("togglePassIcon"); if(!passInput||!icon) return; if(passInput.type==="password"){ passInput.type="text"; icon.classList.remove("fa-eye"); icon.classList.add("fa-eye-slash"); } else { passInput.type="password"; icon.classList.remove("fa-eye-slash"); icon.classList.add("fa-eye"); } }
-function registerUser(){ const t=translations[currentLang]; const name=document.getElementById("userName")?.value||""; const email=document.getElementById("userEmail")?.value||""; const phone=document.getElementById("userPhone")?.value||""; const pass=document.getElementById("userPass")?.value||""; if(!name || !email || !pass){ alert(t.msgFillData); return; } currentUser = { name, email, phone, password: pass, date: new Date().toLocaleDateString() }; localStorage.setItem("barawi_currentUser", JSON.stringify(currentUser)); const customers = JSON.parse(localStorage.getItem("barawi_customers")) || []; if(!customers.find(c=>c.email===email)){ customers.push(currentUser); localStorage.setItem("barawi_customers", JSON.stringify(customers)); } saveCustomerToFirebase({ ...currentUser, id: safeDbKey(email) }); alert(t.msgLoginSucc + name); location.reload(); }
-async function checkout(){ const t=translations[currentLang]; if(cart.length===0){ alert(t.msgCartEmpty); return; } const cName=document.getElementById("chkName")?.value||""; const cPhone=document.getElementById("chkPhone")?.value||""; const cAltPhone=document.getElementById("chkAltPhone")?.value||""; const cAddress=document.getElementById("chkAddress")?.value||""; const cPayment=document.getElementById("chkPayment")?.value||""; if(!cName || !cPhone || !cAddress){ alert(t.msgFillDelivery); return; } const total = cart.reduce((sum,i)=>sum + ((Number(i.price)||0)*(Number(i.quantity)||0)),0); const newOrder = { id: "ORD" + Date.now(), customerName: cName, customerPhone: cPhone, customerAltPhone: cAltPhone, customerAddress: cAddress, paymentMethod: cPayment, items: cart.map(item => ({...item})), total, status: "جديد", date: new Date().toLocaleString("ar-EG") };
+function registerUser(){
+    const t = translations[currentLang];
+    const name1 = document.getElementById("userName1")?.value || "";
+    const name2 = document.getElementById("userName2")?.value || "";
+    const name3 = document.getElementById("userName3")?.value || "";
+    const email = document.getElementById("userEmail")?.value || "";
+    const phone = document.getElementById("userPhone")?.value || "";
+    const pass = document.getElementById("userPass")?.value || "";
+
+    if(!name1 || !name2 || !name3 || !email || !phone || !pass){
+        alert(t.msgFillData);
+        return;
+    }
+
+    if(!validEgyptPhone(phone)){
+        alert("رقم الهاتف يجب أن يكون 11 رقم ويبدأ بـ 01");
+        return;
+    }
+
+    if(!isEmailVerified("auth") || (emailVerifyState.auth?.email !== String(email).trim())){
+        alert("أكد البريد الإلكتروني أولاً");
+        return;
+    }
+
+    const fullName = joinParts(name1, name2, name3);
+
+    currentUser = {
+        firstName: name1,
+        fatherName: name2,
+        familyName: name3,
+        name: fullName,
+        email: String(email).trim(),
+        phone: String(phone).trim(),
+        password: pass,
+        date: new Date().toLocaleDateString()
+    };
+
+    localStorage.setItem("barawi_currentUser", JSON.stringify(currentUser));
+
+    const customers = JSON.parse(localStorage.getItem("barawi_customers")) || [];
+    if(!customers.find(c => c.email === email)){
+        customers.push(currentUser);
+        localStorage.setItem("barawi_customers", JSON.stringify(customers));
+    }
+
+    saveCustomerToFirebase({ ...currentUser, id: safeDbKey(email) });
+    alert(t.msgLoginSucc + fullName);
+    location.reload();
+}
+async function checkout(){
+    const t = translations[currentLang];
+
+    if(cart.length === 0){
+        alert(t.msgCartEmpty);
+        return;
+    }
+
+    const cName1 = document.getElementById("chkName1")?.value || "";
+    const cName2 = document.getElementById("chkName2")?.value || "";
+    const cName3 = document.getElementById("chkName3")?.value || "";
+    const cEmail = document.getElementById("chkEmail")?.value || "";
+    const cPhone = document.getElementById("chkPhone")?.value || "";
+    const cAltPhone = document.getElementById("chkAltPhone")?.value || "";
+    const cGov = document.getElementById("chkGov")?.value || "";
+    const cCenter = document.getElementById("chkCenter")?.value || "";
+    const cStreet = document.getElementById("chkStreet")?.value || "";
+    const cPayment = document.getElementById("chkPayment")?.value || "";
+
+    if(!cName1 || !cName2 || !cName3 || !cEmail || !cPhone || !cGov || !cCenter || !cStreet){
+        alert(t.msgFillDelivery);
+        return;
+    }
+
+    if(!validEgyptPhone(cPhone)){
+        alert("رقم الهاتف يجب أن يكون 11 رقم ويبدأ بـ 01");
+        return;
+    }
+
+    if(cAltPhone && !validEgyptPhone(cAltPhone)){
+        alert("رقم الهاتف البديل يجب أن يكون 11 رقم ويبدأ بـ 01");
+        return;
+    }
+
+    if(!isEmailVerified("checkout") || (emailVerifyState.checkout?.email !== String(cEmail).trim())){
+        alert("أكد البريد الإلكتروني أولاً");
+        return;
+    }
+
+    const cName = joinParts(cName1, cName2, cName3);
+    const cAddress = joinAddress(cGov, cCenter, cStreet);
+    const total = cart.reduce((sum,i)=>sum + ((Number(i.price)||0)*(Number(i.quantity)||0)),0);
+
+    const newOrder = {
+        id: "ORD" + Date.now(),
+        customerName: cName,
+        customerEmail: String(cEmail).trim(),
+        customerPhone: String(cPhone).trim(),
+        customerAltPhone: String(cAltPhone).trim(),
+        customerAddress: cAddress,
+        customerGovernorate: String(cGov).trim(),
+        customerCenter: String(cCenter).trim(),
+        customerStreet: String(cStreet).trim(),
+        paymentMethod: cPayment,
+        items: cart.map(item => ({...item})),
+        total,
+        status: "جديد",
+        date: new Date().toLocaleString("ar-EG")
+    };
+
     const allProducts = JSON.parse(localStorage.getItem("barawi_products")) || products;
-    cart.forEach(cartItem => { const pIndex = allProducts.findIndex(p=>p.id===cartItem.id); if(pIndex !== -1){ const currentStock = Number(allProducts[pIndex].stock); if(Number.isFinite(currentStock)) allProducts[pIndex].stock = Math.max(0, currentStock - (Number(cartItem.quantity)||0)); } });
-    localStorage.setItem("barawi_products", JSON.stringify(allProducts)); localStorage.setItem("barawi_products_update", Date.now().toString()); setProducts(allProducts);
-    const orders = JSON.parse(localStorage.getItem("barawi_orders")) || []; orders.push(newOrder); localStorage.setItem("barawi_orders", JSON.stringify(orders)); allOrders = orders;
-    const myOrderIds = JSON.parse(localStorage.getItem("barawi_my_orders_ids")) || []; myOrderIds.push(newOrder.id); localStorage.setItem("barawi_my_orders_ids", JSON.stringify(myOrderIds));
-    cart = []; updateCounters(); renderCart(); closePage("cartPage"); alert(t.msgOrderSucc); renderProducts(); renderOrders(); openPage("ordersPage");
+    cart.forEach(cartItem => {
+        const pIndex = allProducts.findIndex(p => p.id === cartItem.id);
+        if(pIndex !== -1){
+            const currentStock = Number(allProducts[pIndex].stock);
+            if(Number.isFinite(currentStock)) allProducts[pIndex].stock = Math.max(0, currentStock - (Number(cartItem.quantity)||0));
+        }
+    });
+
+    localStorage.setItem("barawi_products", JSON.stringify(allProducts));
+    localStorage.setItem("barawi_products_update", Date.now().toString());
+    setProducts(allProducts);
+
+    const orders = JSON.parse(localStorage.getItem("barawi_orders")) || [];
+    orders.push(newOrder);
+    localStorage.setItem("barawi_orders", JSON.stringify(orders));
+    allOrders = orders;
+
+    const myOrderIds = JSON.parse(localStorage.getItem("barawi_my_orders_ids")) || [];
+    myOrderIds.push(newOrder.id);
+    localStorage.setItem("barawi_my_orders_ids", JSON.stringify(myOrderIds));
+
+    cart = [];
+    updateCounters();
+    renderCart();
+    closePage("cartPage");
+    alert(t.msgOrderSucc);
+    renderProducts();
+    renderOrders();
+    openPage("ordersPage");
+
     await saveOrderToFirebase(newOrder);
 }
 window.checkout = checkout;
 
-function sendComplaint(){ const t=translations[currentLang]; const name=document.getElementById("compName")?.value||""; const phone=document.getElementById("compPhone")?.value||""; const email=document.getElementById("compEmail")?.value||""; const msg=document.getElementById("compMsg")?.value||""; if(!name || !msg || !phone || !email){ alert(t.msgFillData); return; } const comps = JSON.parse(localStorage.getItem("barawi_complaints")) || []; const complaint = { id: "CMP" + Date.now(), name, phone, email, msg, date: new Date().toLocaleDateString() }; comps.push(complaint); localStorage.setItem("barawi_complaints", JSON.stringify(comps)); saveComplaintToFirebase(complaint); alert(t.msgSendSucc); ["compName","compPhone","compEmail","compMsg"].forEach(id=>{ const el=document.getElementById(id); if(el) el.value=""; }); closePage("complaintPage"); }
+function sendComplaint(){ const t=translations[currentLang]; const name=document.getElementById("compName")?.value||""; const phone=document.getElementById("compPhone")?.value||""; const email=document.getElementById("compEmail")?.value||""; const msg=document.getElementById("compMsg")?.value||""; if(!name || !msg || !phone || !email){ alert(t.msgFillData); return; } if(!validEgyptPhone(phone)){ alert("رقم الهاتف يجب أن يكون 11 رقم ويبدأ بـ 01"); return; } const comps = JSON.parse(localStorage.getItem("barawi_complaints")) || []; const complaint = { id: "CMP" + Date.now(), name, phone, email, msg, date: new Date().toLocaleDateString() }; comps.push(complaint); localStorage.setItem("barawi_complaints", JSON.stringify(comps)); saveComplaintToFirebase(complaint); alert(t.msgSendSucc); ["compName","compPhone","compEmail","compMsg"].forEach(id=>{ const el=document.getElementById(id); if(el) el.value=""; }); closePage("complaintPage"); }
 function loadSocials(){ setSocials(JSON.parse(localStorage.getItem("barawi_socials")) || { fb:"#", ig:"#", tw:"#", tk:"#", wa:"#"}); }
 function showToast(msg){ const t=document.createElement("div"); t.className="toast-msg"; t.innerText=msg; document.body.appendChild(t); setTimeout(()=>t.remove(), 2000); }
 
@@ -349,6 +642,28 @@ window.barawiSaveCustomerToFirebase = async function(customerData) {
 window.barawiSaveComplaintToFirebase = async function(complaintData) {
   const key = complaintData?.id || ("CMP-" + Date.now());
   await set(ref(db, "complaints/" + key), complaintData);
+};
+
+// دالة إرسال البريد الفعلية باستخدام EmailJS
+window.barawiSendVerificationEmail = async function(email, code, context) {
+    // استخدم المفاتيح التي قدمتها
+    const serviceID = "service_chmjc6j";
+    const templateID = "template_6l0kuhp";
+
+    const templateParams = {
+        to_email: email,
+        code: code,
+        context: context === "auth" ? "تسجيل الدخول" : "إتمام الطلب"
+    };
+
+    try {
+        await emailjs.send(serviceID, templateID, templateParams);
+        console.log(`✅ تم إرسال الكود ${code} إلى ${email}`);
+        return true;
+    } catch (error) {
+        console.error("❌ فشل إرسال الإيميل:", error);
+        throw new Error("فشل إرسال الكود، تأكد من إعدادات البريد");
+    }
 };
 
 onValue(ref(db, "products"), (snapshot) => { const data = snapshot.val(); if(data){ const list = Array.isArray(data) ? data : Object.values(data); if(typeof window.setProducts === "function") window.setProducts(list); } });
